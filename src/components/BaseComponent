@@ -1,0 +1,44 @@
+import React from 'react';
+const MyComponent = React.createClass({
+  render() {
+    const { interval } = this.props;
+    return <p>Interval: {interval}</p>;
+  }
+});
+// import
+const { Component } = React;
+const { Observable } = Rx;
+const { createApp } = Frint;
+const { render, observe } = FrintReact;
+
+// component
+class Root extends Component {
+  render() {
+    const { interval } = this.props;
+
+    return <p>Interval: {interval}</p>;
+  }
+}
+
+// observed component
+const ObservedRoot = observe(function () {
+  const interval$ = Observable.interval(1000);
+
+  return interval$
+    .map(x => ({ interval: x }));
+})(Root);
+
+// App
+const App = createApp({
+  name: 'MyTestApp',
+  providers: [
+    {
+      name: 'component',
+      useValue: ObservedRoot
+    }
+  ]
+});
+
+// render
+const app = new App();
+render(app, document.getElementById('root'));
